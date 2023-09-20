@@ -1,0 +1,68 @@
+// Import required packages
+const express = require('express');
+const mongoose = require('mongoose');
+const redis = require('redis');
+
+// Create an Express application
+const app = express();
+const port = process.env.PORT || 3000;
+
+// Connect to MongoDB
+mongoose.connect('mongodb://mongo:27017/mydb', {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+});
+const db = mongoose.connection;
+db.on('error', console.error.bind(console, 'MongoDB connection error:'));
+db.once('open', () => {
+  console.log('Connected to MongoDB');
+});
+
+// Connect to Redis
+const redisClient = redis.createClient({ host: 'redis', port: 6379 });
+redisClient.on('error', (err) => {
+  console.error('Redis connection error:', err);
+});
+redisClient.on('connect', () => {
+  console.log('Connected to Redis');
+});
+
+// Define a simple route
+app.get('/', (req, res) => {
+  res.send('Hi this is Ankit Jagtap');
+});
+
+// Define a route to save data to Redis
+app.get('/save/:key/:value', (req, res) => {
+  const { key, value } = req.params;
+  redisClient.set(key, value, (err, reply) => {
+    if (err) {
+      console.error('Redis set error:', err);
+      res.status(500).send('Error saving data to Redis');
+    } else {
+      console.log('Data saved to Redis:', reply);
+      res.send('Data saved to Redis');
+    }
+  });
+});
+
+// Define a route to retrieve data from Redis
+app.get('/get/:key', (req, res) => {
+  const { key } = req.params;
+  redisClient.get(key, (err, reply) => {
+    if (err) {
+      console.error('Redis get error:', err);
+      res.status(500).send('Error retrieving data from Redis');
+    } else if (reply === null) {
+      res.status(404).send('Key not found in Redis');
+    } else {
+      console.log('Data retrieved from Redis:', reply);
+      res.send(`Data from Redis: ${reply}`);
+    }
+  });
+});
+
+// Start the Express server
+app.listen(port, () => {
+  console.log(`Server is running on port ${port}`);
+});

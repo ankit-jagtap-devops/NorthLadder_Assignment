@@ -1,0 +1,17 @@
+{
+    "name": "ankit-jagtap-app",
+    "version": "1.0.0",
+    "description": "A Node.js application by Ankit Jagtap",
+    "main": "app.js", 
+    "scripts": {
+      "start": "node app.js" 
+    },
+    "author": "Ankit Jagtap",
+    "license": "MIT",
+    "dependencies": {
+      "express": "^4.17.1", 
+      "mongoose": "^6.1.1",
+      "redis": "^4.0.0"
+    }
+  }
+ 
