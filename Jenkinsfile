@@ -38,7 +38,7 @@ pipeline {
                 ) {
                     // Deploy using Helm
                     sh '''
-                        helm upgrade --install nodejs-app ./my-app/Charts.yaml \
+                        helm upgrade --install nodejs-app ./my-app/Chart.yaml \
                             --namespace default \
                             --values ./my-app/values.yaml
                     '''

@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: nodejs-app
-        image: <your-docker-image>
+        image: ankitjagtap/northladder_assignment
         ports:
         - containerPort: 3000
         env:
